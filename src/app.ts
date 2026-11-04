@@ -1,4 +1,4 @@
-import express, from "express";
+import express from "express";
 import type {Request, Response} from "express"
 
 export interface Produto {
@@ -33,7 +33,7 @@ const produtos: Produto[] = [
 
 function buscaProdutos(id: string | number): number{
     return produtos.findIndex(Produtos => {
-        return produtos.id === Number(id);
+        return Produtos.id === Number(id);
     });
 }
 
@@ -51,7 +51,7 @@ app.get("/produtos", (req:Request, res: Response) => {
     const{id, name, category, size, price} = req.body;
 });
 
-app.post("/produtos", (req, res) => {
+app.post("/produtos", (req: Request, res: Response) => {
     const {id, name, category, size, price} = req.body;
 
     const novoProduto: Produto = {
@@ -59,23 +59,27 @@ app.post("/produtos", (req, res) => {
             name,
             category,
             price: Number(price),
-            size: Number(size)
+            size,
         }
     })
 
 
+//REQUISIÇÃO PUT (ATUALIZAR DADOS)
+app.put("/produtos/:id", (req: Request, res: Response) => {
+    const index = buscaProdutos(String(req.params.id));
 
+    if (index === -1) {
+        res.status(404).json({ mensagem: "Produto não encontrado!" });
+        return;
+    }
 
-app.put("/produtos/:id", (req, res) => {
-    const index = buscaProdutos(req.params.id);
-
-    const { id, name, category, size, price } = req.aborted;
+    const { id, name, category, size, price } = req.body;
 
     produtos[index] = {
-        ...produtos[index],
+        ...produtos[index]!,
         name,
         category,
-        price,
+        price: Number(price),
         size
     };
 
@@ -85,6 +89,19 @@ app.put("/produtos/:id", (req, res) => {
     });
 });
 
+//REQUISIÇÃO DELETE (REMOVER DADOS)
+app.delete("/produtos/:id", (req: Request, res: Response) => {
+    const index = buscaProdutos(String(req.params.id));
 
+    if (index === -1) {
+        res.status(404).json({ mensagem: "Produto não encontrado!" });
+        return;
+    }
+
+    //Remover o Produto do array base (Produtos) com base no índice (id)
+    produtos.splice(index, 1);
+
+    res.status(200).json({ mensagem: "Produto removido com sucesso!" });
+});
 
 export default app;
