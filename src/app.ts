@@ -31,6 +31,7 @@ const produtos: Produto[] = [
     }
 ];
 
+//FUNÇÃO PARA BUSCAR PRODUTOS PELO ID
 function buscaProdutos(id: string | number): number{
     return produtos.findIndex(Produtos => {
         return Produtos.id === Number(id);
