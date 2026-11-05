@@ -62,7 +62,10 @@ app.post("/produtos", (req: Request, res: Response) => {
             price: Number(price),
             size,
         }
-    })
+
+       
+        res.status(201).json(novoProduto);
+    });
 
 
 //REQUISIÇÃO PUT (ATUALIZAR DADOS)
