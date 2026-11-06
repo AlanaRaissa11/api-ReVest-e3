@@ -63,7 +63,7 @@ app.post("/produtos", (req: Request, res: Response) => {
             size,
         }
 
-       
+
         res.status(201).json(novoProduto);
     });
 
@@ -89,6 +89,31 @@ app.put("/produtos/:id", (req: Request, res: Response) => {
 
     res.status(200).json({
         mensagem: "Produto atualizado com sucesso!",
+        Produto: produtos[index]
+    });
+});
+// REQUISIÇÃO PATCH (ATUALIZAÇÃO PARCIAL)
+app.patch("/produtos/:id", (req: Request, res: Response) => {
+    const index = buscaProdutos(String(req.params.id));
+
+    if (index === -1) {
+        res.status(404).json({ mensagem: "Produto não encontrado!" });
+        return;
+    }
+
+    const { name, category, size, price } = req.body;
+
+    // ATUALIZA APENAS OS CAMPOS ENVIADOS NO BODY, MANTENDO OS VALORES ANTIGOS NOS DEMAIS
+    produtos[index] = {
+        ...produtos[index]!,
+        ...(name !== undefined && { name }),
+        ...(category !== undefined && { category }),
+        ...(size !== undefined && { size }),
+        ...(price !== undefined && { price: Number(price) })
+    };
+
+    res.status(200).json({
+        mensagem: "Produto atualizado parcialmente com sucesso!",
         Produto: produtos[index]
     });
 });
