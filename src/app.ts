@@ -1,42 +1,42 @@
 import express from "express";
-import type {Request, Response} from "express"
+import type {Request, Response} from "express";
+import Produto from "./models/Produto.js";
 
-export interface Produto {
-    id: number;
-    name: string;
-    category: string;
-    price: number;
-    size: string;
-    
 
-}
+// export interface Produto {
+//     id: number;
+//     name: string;
+//     category: string;
+//     price: number;
+//     size: string;
+// }
 
 const app = express();
 app.use(express.json());
 
-const produtos: Produto[] = [
-    {
-        id: 1,
-        name: "Camiseta Básica Algodão",
-        category: "Camisetas",
-        price: 19.99,
-        size: "M"
-    },
-    {
-        id:2,
-        name: "Calça Jeans Slim",
-        category: "Calças",
-        price: 29.99,
-        size: "46"
-    }
-];
+// const produtos: Produto[] = [
+//     {
+//         id: 1,
+//         name: "Camiseta Básica Algodão",
+//         category: "Camisetas",
+//         price: 19.99,
+//         size: "M"
+//     },
+//     {
+//         id:2,
+//         name: "Calça Jeans Slim",
+//         category: "Calças",
+//         price: 29.99,
+//         size: "46"
+//     }
+// ];
 
 //FUNÇÃO PARA BUSCAR PRODUTOS PELO ID
-function buscaProdutos(id: string | number): number{
-    return produtos.findIndex(Produtos => {
-        return Produtos.id === Number(id);
-    });
-}
+// function buscaProdutos(id: string | number): number{
+//     return produtos.findIndex(Produtos => {
+//         return Produtos.id === Number(id);
+//     });
+// }
 
 //REQUISIÇÕES
 app.get("/", (req: Request, res: Response) => {
@@ -44,7 +44,13 @@ app.get("/", (req: Request, res: Response) => {
 });
 
 app.get("/produtos", (req:Request, res: Response) => {
-    res.status(200).json(produtos);
+    try{
+        const listaProdutos = Produto.find({});
+        res.status(200).json(listaProdutos);
+    }catch (error){
+        res.status(500).json({mensagem: "Erro ao buscar Produto."})
+    }
+    
 });
 
 //REQUISIÇÃO POST (CADASTRAR NOVO PRODUTO)
