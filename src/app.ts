@@ -1,6 +1,6 @@
 import express from "express";
 import type {Request, Response} from "express";
-import Produto from "./models/Produto.js";
+import Produto, { type InterfaceProduto } from "./models/Produto.js";
 
 
 // export interface Produto {
@@ -12,7 +12,10 @@ import Produto from "./models/Produto.js";
 // }
 
 const app = express();
+
+// MIDDLEWARE
 app.use(express.json());
+app.set("json spaces", 2);
 
 // const produtos: Produto[] = [
 //     {
@@ -54,23 +57,31 @@ app.get("/produtos", (req:Request, res: Response) => {
 });
 
 //REQUISIÇÃO POST (CADASTRAR NOVO PRODUTO)
-app.get("/produtos", (req:Request, res: Response) => {
-    const{id, name, category, size, price} = req.body;
-});
+// app.get("/produtos", (req:Request, res: Response) => {
+//     const{id, name, category, size, price, stock, description} = req.body;
+// });
 
-app.post("/produtos", (req: Request, res: Response) => {
-    const {id, name, category, size, price} = req.body;
+app.post("/produtos", async (req: Request<{},{},InterfaceProduto>, res: Response) => {
 
-    const novoProduto: Produto = {
-            id: Number(id),
+    try{
+    const{ name, category, size, price, stock, description} = req.body;
+
+    const novoProduto = await Produto.create({
             name,
             category,
             price: Number(price),
-            size,
-        }
+            size: Number (size),
+            stock: Number (stock),
+            description,
+        });
 
-
-        res.status(201).json(novoProduto);
+        res.status(201).json({
+            mensagem: "Produto cadastrado com sucesso!",
+            Produto: novoProduto
+        });
+    }catch (error){
+        res.status(500).json({mensagem: "Erro ao cadastrar produto."})
+    }
     });
 
 

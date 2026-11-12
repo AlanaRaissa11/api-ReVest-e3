@@ -16,7 +16,7 @@ const produtosSchema = new Schema (
         category: {type: String, required: true},
         price: {type: Number, require: true},
         size: {type: Number, required: true},
-        stock: {type: String, required: true},
+        stock: {type: Number, required: true},
         description: {type: String, required: true},
 },
 {versionKey: false}
