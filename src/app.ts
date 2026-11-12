@@ -86,29 +86,38 @@ app.post("/produtos", async (req: Request<{},{},InterfaceProduto>, res: Response
 
 
 //REQUISIÇÃO PUT (ATUALIZAR DADOS)
-app.put("/produtos/:id", (req: Request, res: Response) => {
-    const index = buscaProdutos(String(req.params.id));
+app.put("/produtos/:id", async (req: Request<{id: string}, {}, InterfaceProduto>, res: Response) => {
 
-    if (index === -1) {
-        res.status(404).json({ mensagem: "Produto não encontrado!" });
-        return;
-    }
+    try{
+        const { id } = req.params;
 
-    const { id, name, category, size, price } = req.body;
+        const { name, category, size, price, stock, description } = req.body;
 
-    produtos[index] = {
-        ...produtos[index]!,
-        name,
-        category,
-        price: Number(price),
-        size
+        const produtoAtualizado = await Produto.findByIdAndUpdate(
+            id,
+            {
+                name,
+                category,
+                price: Number(price),
+                size: Number (size),
+                stock: Number (stock),
+                description,
+            },
+            {new: true}
+        
+        );
+
+
+        res.status(200).json({
+            mensagem: "Produto atualizado com sucesso!",
+            Produto: produtoAtualizado
+        });
+    } catch(error){
+        res.status(500).json({mensagem: "Erro ao atualizar com sucesso!"})
+    
     };
-
-    res.status(200).json({
-        mensagem: "Produto atualizado com sucesso!",
-        Produto: produtos[index]
-    });
 });
+
 // REQUISIÇÃO PATCH (ATUALIZAÇÃO PARCIAL)
 app.patch("/produtos/:id", (req: Request, res: Response) => {
     const index = buscaProdutos(String(req.params.id));
@@ -121,8 +130,8 @@ app.patch("/produtos/:id", (req: Request, res: Response) => {
     const { name, category, size, price } = req.body;
 
     // ATUALIZA APENAS OS CAMPOS ENVIADOS NO BODY, MANTENDO OS VALORES ANTIGOS NOS DEMAIS
-    produtos[index] = {
-        ...produtos[index]!,
+    produto[index] = {
+        ...produto[index]!,
         ...(name !== undefined && { name }),
         ...(category !== undefined && { category }),
         ...(size !== undefined && { size }),
