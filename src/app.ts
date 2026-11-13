@@ -107,6 +107,10 @@ app.put("/produtos/:id", async (req: Request<{id: string}, {}, InterfaceProduto>
         
         );
 
+        if(!produtoAtualizado){
+            res.status(404).json({mensagem: "Produto não encontrada!"});
+            return;
+        }
 
         res.status(200).json({
             mensagem: "Produto atualizado com sucesso!",
