@@ -103,13 +103,14 @@ app.put("/produtos/:id", async (req: Request<{id: string}, {}, InterfaceProduto>
                 stock: Number (stock),
                 description,
             },
-            {new: true}
+            { returnDocument: 'after'}
         
         );
 
         if(!produtoAtualizado){
             res.status(404).json({mensagem: "Produto não encontrada!"});
             return;
+
         }
 
         res.status(200).json({
@@ -123,44 +124,54 @@ app.put("/produtos/:id", async (req: Request<{id: string}, {}, InterfaceProduto>
 });
 
 // REQUISIÇÃO PATCH (ATUALIZAÇÃO PARCIAL)
-app.patch("/produtos/:id", (req: Request, res: Response) => {
-    const index = buscaProdutos(String(req.params.id));
+app.patch("/produtos/:id", async (req: Request<{id: string}, {}, InterfaceProduto>, res: Response) => {
 
-    if (index === -1) {
-        res.status(404).json({ mensagem: "Produto não encontrado!" });
-        return;
+    try{
+        const { id } = req.params;
+
+
+        const produtoAtualizado = await Produto.findByIdAndUpdate(
+            id,
+            { $set : req.body },
+            { returnDocument: 'after'}
+        );
+
+        if (!produtoAtualizado) {
+            res.status(404).json({ mensagem: "Produto não encontrado!" });
+            return;
+        }
+
+        res.status(200).json({
+            mensagem: "Produto atualizado parcialmente com sucesso!",
+            Produto: produtoAtualizado,
+        });
+    }catch(error){
+        res.status(500).json({mensagem: "Error ao atualizar parcialmente o produto."});
     }
-
-    const { name, category, size, price } = req.body;
-
-    // ATUALIZA APENAS OS CAMPOS ENVIADOS NO BODY, MANTENDO OS VALORES ANTIGOS NOS DEMAIS
-    produto[index] = {
-        ...produto[index]!,
-        ...(name !== undefined && { name }),
-        ...(category !== undefined && { category }),
-        ...(size !== undefined && { size }),
-        ...(price !== undefined && { price: Number(price) })
-    };
-
-    res.status(200).json({
-        mensagem: "Produto atualizado parcialmente com sucesso!",
-        Produto: produtos[index]
-    });
 });
 
-//REQUISIÇÃO DELETE (REMOVER DADOS)
-app.delete("/produtos/:id", (req: Request, res: Response) => {
-    const index = buscaProdutos(String(req.params.id));
 
-    if (index === -1) {
+//REQUISIÇÃO DELETE (REMOVER DADOS)
+app.delete("/produtos/:id",async (req: Request<{ id: string }>, res: Response) => {
+    try{
+    const { id } = req.params;
+
+    const produtoDeletado = await Produto.findByIdAndDelete(id);
+
+    if (!produtoDeletado){
         res.status(404).json({ mensagem: "Produto não encontrado!" });
         return;
     }
 
-    //Remover o Produto do array base (Produtos) com base no índice (id)
-    produtos.splice(index, 1);
+    res.status(200).json({
+        mensagem: "Produto removido com sucesso!",
+    });
+    }catch (error){
+        res.status(500).json({ mensagem: "Erro ao remover livto." });
+    
 
-    res.status(200).json({ mensagem: "Produto removido com sucesso!" });
+    
+}
 });
 
 export default app;
