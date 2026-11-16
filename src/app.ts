@@ -14,27 +14,5 @@ app.get("/", (req: Request, res: Response) => {
     res.status(200).send("API Loja de Roupas Seminovas");
 });
 
-app.get("/produtos", (req:Request, res: Response) => {
-    
-});
-
-app.post("/produtos", async (req: Request<{},{},InterfaceProduto>, res: Response) => {
-    });
-
-
-//REQUISIÇÃO PUT (ATUALIZAR DADOS)
-app.put("/produtos/:id", async (req: Request<{id: string}, {}, InterfaceProduto>, res: Response) => {
-});
-
-// REQUISIÇÃO PATCH (ATUALIZAÇÃO PARCIAL)
-app.patch("/produtos/:id", async (req: Request<{id: string}, {}, InterfaceProduto>, res: Response) => {
-
-});
-
-
-//REQUISIÇÃO DELETE (REMOVER DADOS)
-app.delete("/produtos/:id",async (req: Request<{ id: string }>, res: Response) => {
-
-});
 
 export default app;
