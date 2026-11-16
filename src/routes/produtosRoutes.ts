@@ -14,5 +14,5 @@ router.put("/produtos/:id", ProdutoController.atualizar);
 router.patch("/produtos/:id", ProdutoController.atualizarParcial);
 router.delete("/produtos/:id", ProdutoController.deletar);
 
-//Exportação do gerenciador de rotas
+//Exportação do gerenciador de rotas para app.ts
 export default router;
