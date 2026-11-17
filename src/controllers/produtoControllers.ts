@@ -12,6 +12,24 @@ static async listar(req: Request, res: Response) {
         res.status(500).json({ message: "Erro ao buscar Produtos." });
         }
     }
+
+//GET - BUSCAR UM PRODUTO ESPECÍFICO PELO ID - REQ PARAMS
+    static async buscarPorId (req: Request<{ id: string }>, res: Response){
+        try{
+            const { id } = req.params;
+            const produtoEncontrado = await Produto.findById(id);
+
+            if(!produtoEncontrado) {
+                res.status(404).json({mensagem: "Produto não encontrado."});
+            }
+
+            res.status(200).json(produtoEncontrado);
+        }catch (error){
+            res.status(500).json({mensagem: "Erro ao buscar produtos por ID."})
+        }
+    }
+
+
     //POST - Cadastrar novo produto
 static async cadastrar(req: Request<{},{},InterfaceProduto>, res: Response) {
         try {
