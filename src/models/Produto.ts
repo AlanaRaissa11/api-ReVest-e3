@@ -1,13 +1,5 @@
 import mongoose, {Schema, Document, type InferSchemaType} from "mongoose"
 
-//INTERFACE ALINHADA COM AS PROPRIEDADES USADAS NO APP.TS
-//export interface InterfaceProduto extends Document{
-//     name: string;
-//     category: string;
-//     price: number;
-//     size: string;
-    
-// }
 
 //DEFINIÇÃO DO SCHEMA MAPEANDO OS CAMPOS
 const produtosSchema = new Schema (
@@ -18,6 +10,7 @@ const produtosSchema = new Schema (
         size: {type: Number, required: true},
         stock: {type: Number, required: true},
         description: {type: String, required: true},
+        cover: { type: String, default: "https://placehold.co/300x450?text=No+Cover"},
 },
 {versionKey: false}
 

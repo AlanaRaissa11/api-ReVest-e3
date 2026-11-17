@@ -15,7 +15,7 @@ static async listar(req: Request, res: Response) {
     //POST - Cadastrar novo produto
 static async cadastrar(req: Request<{},{},InterfaceProduto>, res: Response) {
         try {
-        const { name, category, size, price, stock, description } = req.body;
+        const { name, category, size, price, stock, description, cover } = req.body;
 
         const novoProduto = await Produto.create({
             name,
@@ -24,6 +24,7 @@ static async cadastrar(req: Request<{},{},InterfaceProduto>, res: Response) {
             size: Number(size),
             stock: Number(stock),
             description,
+            cover
         });
 
         res.status(201).json({
@@ -39,7 +40,7 @@ static async cadastrar(req: Request<{},{},InterfaceProduto>, res: Response) {
 static async atualizar(req: Request<{ id: string }, {}, InterfaceProduto>, res: Response) {
         try {
         const { id } = req.params;
-        const { name, category, size, price, stock, description } = req.body;
+        const { name, category, size, price, stock, description, cover } = req.body;
 
         const produtoAtualizado = await Produto.findByIdAndUpdate(
             id,
@@ -50,6 +51,7 @@ static async atualizar(req: Request<{ id: string }, {}, InterfaceProduto>, res: 
                 size: Number(size),
                 stock: Number(stock),
                 description,
+                cover
             },
             { returnDocument: "after" }
         );
