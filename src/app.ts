@@ -1,6 +1,7 @@
 import express from "express";
 import type {Request, Response} from "express";
 import Produto, { type InterfaceProduto } from "./models/Produto.js";
+import produtosRoutes from "./routes/produtosRoutes.js"
 
 
 const app = express();
@@ -9,10 +10,12 @@ const app = express();
 app.use(express.json());
 app.set("json spaces", 2);
 
-//REQUISIÇÕES
+//ROTA BASE
 app.get("/", (req: Request, res: Response) => {
-    res.status(200).send("API Loja de Roupas Seminovas");
+    res.status(200).send("ReVeste - Roupas Seminovas");
 });
 
+//REGISTRAR AS ROTAS DE "PRODUTOS" NA APLICAÇÃO
+app.use(produtosRoutes);
 
 export default app;
