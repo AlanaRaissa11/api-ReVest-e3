@@ -29,6 +29,37 @@ static async listar(req: Request, res: Response) {
         }
     }
 
+    //GET - FILTRAR PRODUTOS POR CRITÉRIOS OPCIONAIS - REQ QUERY
+    static async buscarPorFiltro (req: Request, res: Response){
+        try{
+            //Extrair os possiveis filtros enviados apos o "?" na URL
+            const { nome, categoria, descrição} = req.query;
+
+            //Criar um objeto vazio para receber apenas os filtros preenchidos
+            const filtro: Record<string, any> = {};
+
+            if(nome) {
+                filtro.name = String(nome); //Buscar exata
+            }
+
+            if(categoria) {
+                filtro.category = String(categoria);
+            }
+            
+            if(descrição) {
+                //$regex: busca parcial 
+                filtro.description = { $regex: String(descrição), $options: "1"}
+            }
+
+            const produtosFiltrados = await Produto.find(filtro);
+            
+            res.status(500).json({mensagem: "Erro ao filtrar produtos."})
+
+        }catch(error) {
+            res.status(500).json({mensagem: "Erro ao cadastrar produtos."})
+
+        }
+    }
 
     //POST - Cadastrar novo produto
 static async cadastrar(req: Request<{},{},InterfaceProduto>, res: Response) {
