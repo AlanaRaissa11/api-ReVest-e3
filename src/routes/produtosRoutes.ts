@@ -7,12 +7,19 @@ import ProdutoController from "../controllers/produtoControllers.js";
 //Inicilizar o gerenciador de rotas do express
 const router = Router();
 
-//Criação de rotas da entidade produtos
+//1º - ROTAS FIXAS E DE BUSCAS
 router.get("/produtos", ProdutoController.listar);
+router.get("/produtos/busca", ProdutoController.buscarPorFiltro);
+
+//2º - ROTAS DE BUSCAS COM PARÂMETRO DINÂMICO
+router.get("/produtos/:id", ProdutoController.buscarPorId);
+
+//3º - ROTAS DE ESCRITA E REMOÇÃO (ESTÁTICAS E DINÂMICAS)
+
 router.post("/produtos", ProdutoController.cadastrar);
 router.put("/produtos/:id", ProdutoController.atualizar);
 router.patch("/produtos/:id", ProdutoController.atualizarParcial);
 router.delete("/produtos/:id", ProdutoController.deletar);
 
-//Exportação do gerenciador de rotas para app.ts
+//EXPORTÇÃO DO GERENCIADOR DE ROTAS PARA APP.TS
 export default router;
