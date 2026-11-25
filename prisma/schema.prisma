@@ -16,9 +16,9 @@ model Produto {
   id            String @id @default(uuid())
   name          String
   category      String
-  price         Number
-  size          Number
-  stock         Number
+  price         Int
+  size          Int
+  stock         Int
   description   String
   cover         String @default("https://placehold.co/300x450?text=No+Cover")
 }
