@@ -16,11 +16,11 @@ export interface FiltroProdutoDTO {
 }
 
 export interface IProdutoRepository{
-    listar(): Promise<any[]>;
-    buscarPorId(id: string): Promise<any[] | null>;
-    buscarporFiltro(filtros: FiltroProdutoDTO): Promise<any[]>;
-    cadastrar(dados: ProdutoDTO): Promise<any[]>;
-    atualizar(id: string, dados: ProdutoDTO): Promise<any[]>;
-    atualizarParcial(id: string, dados:Partial<ProdutoDTO>): Promise<any[] | null>;
+    listar(): Promise<ProdutoDTO[]>;
+    buscarPorId(id: string): Promise<ProdutoDTO | null>;
+    buscarPorFiltro(filtros: FiltroProdutoDTO): Promise<ProdutoDTO[]>;
+    cadastrar(dados: ProdutoDTO): Promise<ProdutoDTO>;
+    atualizar(id: string, dados: ProdutoDTO): Promise<ProdutoDTO | null>;
+    atualizarParcial(id: string, dados:Partial<ProdutoDTO>): Promise<ProdutoDTO | null>;
     deletar(id: string): Promise<boolean>;
 }
